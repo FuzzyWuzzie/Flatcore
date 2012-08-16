@@ -1,0 +1,5 @@
+name: Flatcore
+main: com.mcnsa.flatcore.Flatcore
+version: 1.0.0
+author: FuzzyWuzzie
+depend: [PermissionsEx]

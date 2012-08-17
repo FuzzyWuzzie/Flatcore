@@ -83,6 +83,9 @@ public class PlayerListener implements Listener {
 		if(plugin.stateManager.newPlayer(event.getPlayer())) {
 			// randomize their spawning!
 			event.getPlayer().teleport(randomSpawn(event.getPlayer()));
+			
+			// and make them immortal for a bit
+			plugin.stateManager.immortalize(event.getPlayer());
 		}
 	}
 	
@@ -91,6 +94,9 @@ public class PlayerListener implements Listener {
 	public void playerSpawn(PlayerRespawnEvent event) {
 		// get them a random spawn!
 		event.setRespawnLocation(randomSpawn(event.getPlayer()));
+		
+		// and make them immortal for a bit
+		plugin.stateManager.immortalize(event.getPlayer());
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -162,6 +168,13 @@ public class PlayerListener implements Listener {
 	public void onDamage(EntityDamageEvent event) {
 		// make sure a player got damaged 
 		if(event.getEntity() instanceof Player) {
+			// before we go anywhere, see if they're immortal first
+			if(!plugin.stateManager.isMortal((Player)event.getEntity())) {
+				// cancel the damage
+				event.setCancelled(true);
+				return;
+			}
+			
 			// set that player's last damage
 			plugin.stateManager.setLastDamage((Player)event.getEntity(), event);
 			

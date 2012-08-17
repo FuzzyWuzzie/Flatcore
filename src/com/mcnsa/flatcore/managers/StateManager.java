@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore.managers;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.TimerTask;
 
@@ -10,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.mcnsa.flatcore.Flatcore;
+import com.mcnsa.flatcore.util.ColourHandler;
 
 public class StateManager {
 	// keep track of the last damage each player recieved
@@ -17,6 +19,9 @@ public class StateManager {
 	
 	// keep track of deathban times
 	private HashMap<String, Long> deathBanTimes = new HashMap<String, Long>();
+	
+	// keep track of immortality times
+	private HashMap<String, Long> immortalityTimes = new HashMap<String, Long>();
 	
 	Flatcore plugin = null;
 	public StateManager(Flatcore instance) {
@@ -51,8 +56,13 @@ public class StateManager {
 	
 	// apply a deathban to a player
 	public void deathBan(Player player) {
-		// TODO: check admin permissions
-		deathBanTimes.put(player.getName(), plugin.config.options.deathBanTime);
+		// check player permissions
+		if(plugin.hasPermission(player, "mod")) {
+			deathBanTimes.put(player.getName(), plugin.config.options.modDeathBanTime);
+		}
+		else {
+			deathBanTimes.put(player.getName(), plugin.config.options.deathBanTime);
+		}
 	}
 	
 	// update the timers on death bans
@@ -62,6 +72,64 @@ public class StateManager {
 		for(String player: deathBanTimes.keySet()) {
 			if(deathBanTimes.get(player) > 0L) {
 				deathBanTimes.put(player, deathBanTimes.get(player) - 1);
+			}
+		}
+	}
+	
+	// check to see if a player is mortal or not
+	public boolean isMortal(Player player) {
+		// default to mortal
+		if(!immortalityTimes.containsKey(player.getName())) {
+			return true;
+		}
+		return (immortalityTimes.get(player.getName()) <= 0L);
+	}
+	
+	// make a player immortal
+	public void immortalize(Player player) {
+		// set them as "immortal"
+		immortalityTimes.put(player.getName(), plugin.config.options.spawnImmortalityTime);
+		// send them a message
+		String message = plugin.config.options.spawnImmortalityMessage;
+		message = message.replaceAll("#immortaltime", plugin.formatTime(plugin.config.options.spawnImmortalityTime));
+		message = ColourHandler.processColours(message);
+		player.sendMessage(message);
+	}
+	
+	// make a player mortal again
+	public void mortalize(Player player) {
+		// set them as "mortal"
+		immortalityTimes.put(player.getName(), 0L);
+		// send them a message
+		String message = plugin.config.options.spawnMortalityMessage;
+		message = ColourHandler.processColours(message);
+		player.sendMessage(message);
+	}
+	
+	// update timers on immortality
+	public void updateImmortality() {
+		for(String playerName: immortalityTimes.keySet()) {
+			// only update their immortality if they're online
+			Player player = plugin.getServer().getPlayer(playerName);
+			if(player != null && Arrays.asList(plugin.getServer().getOnlinePlayers()).contains(player)) {
+				if(immortalityTimes.get(playerName) > 0L) {
+					// update their timer
+					immortalityTimes.put(playerName, immortalityTimes.get(playerName) - 1);
+					
+					// check to see if we should be reminding them
+					if((plugin.config.options.spawnImmortalityTime - immortalityTimes.get(playerName)) % plugin.config.options.spawnImmortalityReminder == 0) {
+						String message = plugin.config.options.spawnImmortalityMessage;
+						message = message.replaceAll("#immortaltime", plugin.formatTime(plugin.config.options.spawnImmortalityTime));
+						message = ColourHandler.processColours(message);
+						player.sendMessage(message);
+					}
+					
+					// now check to see if the player has gone mortal
+					if(immortalityTimes.get(playerName) <= 0L) {
+						// they've gone mortal!
+						mortalize(player);
+					}
+				}
 			}
 		}
 	}
@@ -206,6 +274,7 @@ public class StateManager {
 			try {
 				// update things every second
 				stateManager.updateDeathBans();
+				stateManager.updateImmortality();
 			}
 			catch(Exception e) {
 				stateManager.plugin.error("TickerTask crashed: " + e.getMessage());

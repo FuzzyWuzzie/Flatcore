@@ -4,11 +4,39 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.TimerTask;
 
-import org.bukkit.entity.EntityType;
+import org.bukkit.Material;
+import org.bukkit.entity.Blaze;
+import org.bukkit.entity.CaveSpider;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Giant;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Silverfish;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Squid;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.mcnsa.flatcore.Flatcore;
 import com.mcnsa.flatcore.util.ColourHandler;
@@ -22,6 +50,11 @@ public class StateManager {
 	
 	// keep track of immortality times
 	public HashMap<String, Long> immortalityTimes = new HashMap<String, Long>();
+	
+	// enumerate all the ways we can die
+	public static enum DeathEventType {
+		BLOCK_EXPLOSION, ENTITY_EXPLOSION, CAVE_SPIDER, CONTACT, CREEPER, DROWNING, ENDERMAN, FALL, FIRE, FIRE_TICK, GHAST, GIANT, LAVA, LIGHTNING, MONSTER, PIG_ZOMBIE, PVP, PVP_FISTS, PVP_TAMED, SILVERFISH, SKELETON, SLIME, SPIDER, STARVATION, SUFFOCATION, SUICIDE, UNKNOWN, VOID, WOLF, ZOMBIE, BLAZE, MAGMA_CUBE, ENDERDRAGON, DISPENSER, POISON, MAGIC, IRON_GOLEM
+	}
 	
 	Flatcore plugin = null;
 	public StateManager(Flatcore instance) {
@@ -149,129 +182,147 @@ public class StateManager {
 	
 	// update whatever hit the player last
 	public void setLastDamage(Player player, EntityDamageEvent event) {
-		if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
-			lastPlayerDamage.put(player.getName(), "an &6EXPLOSION");
-		}
-		else if(event.getCause() == DamageCause.CONTACT) {
-			lastPlayerDamage.put(player.getName(), "a &acactus");
-		}
-		else if(event.getCause() == DamageCause.DROWNING) {
-			lastPlayerDamage.put(player.getName(), "&9drowning");
-		}
-		else if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-			lastPlayerDamage.put(player.getName(), "an &cangry mob");
-			if(event instanceof EntityDamageByEntityEvent) {
-				EntityDamageByEntityEvent mobEvent = (EntityDamageByEntityEvent)event;
-				if(mobEvent.getDamager().getType() == EntityType.ARROW) {
-					lastPlayerDamage.put(player.getName(), "an &7arrow");
+		String causeOfDeath = new String("");
+		Player killer = player;
+		String murderWeapon = new String("");
+		if(event instanceof EntityDamageByEntityEvent) {
+			Entity damager = ((EntityDamageByEntityEvent)event).getDamager();
+			if(damager instanceof Player) {
+				if(((Player)damager).getItemInHand().getType().equals(Material.AIR)) {
+					causeOfDeath = "pvp";
+					murderWeapon = "fists";
 				}
-				else if(mobEvent.getDamager().getType() == EntityType.BLAZE) {
-					lastPlayerDamage.put(player.getName(), "a &cblaze");
+				else {
+					causeOfDeath = "pvp";
 				}
-				else if(mobEvent.getDamager().getType() == EntityType.CAVE_SPIDER) {
-					lastPlayerDamage.put(player.getName(), "a &acave spider");
+				murderWeapon = ((Player)damager).getItemInHand().getType().toString();
+				killer = (Player)damager;
+			}
+			else if (damager instanceof Creature || damager instanceof Slime) {
+				if (damager instanceof Tameable && ((Tameable)damager).isTamed()) {
+					causeOfDeath = "pvp";
+					murderWeapon = getEntityType(damager).toString();
+					killer = (Player)((Tameable) damager).getOwner();
 				}
-				else if(mobEvent.getDamager().getType() == EntityType.CREEPER) {
-					lastPlayerDamage.put(player.getName(), "a &acreeper");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.ENDER_DRAGON) {
-					lastPlayerDamage.put(player.getName(), "an &5ender dragon");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.ENDERMAN) {
-					lastPlayerDamage.put(player.getName(), "an &5enderman");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.FALLING_BLOCK) {
-					lastPlayerDamage.put(player.getName(), "&bsuffocation");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.FIREBALL) {
-					lastPlayerDamage.put(player.getName(), "a &4fireball");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.GHAST) {
-					lastPlayerDamage.put(player.getName(), "a &fghast");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.GIANT) {
-					lastPlayerDamage.put(player.getName(), "a &2GIANT");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.IRON_GOLEM) {
-					lastPlayerDamage.put(player.getName(), "an &7iron golem");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.LIGHTNING) {
-					lastPlayerDamage.put(player.getName(), "&elightning");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.MAGMA_CUBE) {
-					lastPlayerDamage.put(player.getName(), "a &4magma cube");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.PIG_ZOMBIE) {
-					lastPlayerDamage.put(player.getName(), "a &cpig zombie");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.PLAYER) {
-					lastPlayerDamage.put(player.getName(), ((Player)mobEvent.getDamager()).getName());
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.SILVERFISH) {
-					lastPlayerDamage.put(player.getName(), "a &7silverfish");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.SKELETON) {
-					lastPlayerDamage.put(player.getName(), "a &fskeleton");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.SLIME) {
-					lastPlayerDamage.put(player.getName(), "a &aslime");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.SMALL_FIREBALL) {
-					lastPlayerDamage.put(player.getName(), "a &4fireball");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.SPIDER) {
-					lastPlayerDamage.put(player.getName(), "a &cspider");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.SPLASH_POTION) {
-					lastPlayerDamage.put(player.getName(), "a &dpotion");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.WOLF) {
-					lastPlayerDamage.put(player.getName(), "a &7wolf");
-				}
-				else if(mobEvent.getDamager().getType() == EntityType.ZOMBIE) {
-					lastPlayerDamage.put(player.getName(), "a &2zombie");
+				else {
+					try {
+						causeOfDeath = getEntityType(damager);
+					}
+					catch (IllegalArgumentException iae) {
+						causeOfDeath = "unknown";
+					}
 				}
 			}
+			else if (damager instanceof Projectile) {
+				if (((Projectile) damager).getShooter() instanceof Player) {
+					causeOfDeath = "pvp";
+					murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+					killer = (Player) ((Projectile) damager).getShooter();
+				}
+				if (((Projectile) damager).getShooter() == null) {
+					//let's assume that null will only be caused by a dispenser!
+					causeOfDeath = "dispenser";
+					murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+				}
+				if (((Projectile) damager).getShooter().toString().equalsIgnoreCase("CraftSkeleton")) {
+					causeOfDeath = "skeleton";
+					murderWeapon = ((Projectile) damager).toString().replace("Craft", "");
+				}
+
+			}
+			else if (damager instanceof TNTPrimed) {
+				causeOfDeath = "block_explosion";
+			}
 		}
-		else if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
-			lastPlayerDamage.put(player.getName(), "an &aEXPLOSION");
+		else if (event != null) {
+			try {
+				causeOfDeath = event.getCause().toString();
+			}
+			catch (IllegalArgumentException e) {
+				causeOfDeath = "unknown";
+			}
 		}
-		else if(event.getCause() == DamageCause.FALL) {
-			lastPlayerDamage.put(player.getName(), "a high fall");
+
+		// update their damage
+		String damage = causeOfDeath + ":" + murderWeapon + ":" + killer.getName();
+		lastPlayerDamage.put(player.getName(), damage);
+	}
+	
+	public static String getEntityType(Entity entity) {
+		if (entity instanceof Blaze) {
+			return "blaze";
 		}
-		else if(event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK) {
-			lastPlayerDamage.put(player.getName(), "&cfire");
+		if (entity instanceof CaveSpider) {
+			return "cave_spider";
 		}
-		else if(event.getCause() == DamageCause.LAVA) {
-			lastPlayerDamage.put(player.getName(), "&4lava");
+		if (entity instanceof Chicken) {
+			return "chicken";
 		}
-		else if(event.getCause() == DamageCause.LIGHTNING) {
-			lastPlayerDamage.put(player.getName(), "&elightning");
+		if (entity instanceof Cow) {
+			return "cow";
 		}
-		else if(event.getCause() == DamageCause.MAGIC) {
-			lastPlayerDamage.put(player.getName(), "&dmagic");
+		if (entity instanceof Creeper) {
+			return "creeper";
 		}
-		else if(event.getCause() == DamageCause.POISON) {
-			lastPlayerDamage.put(player.getName(), "&apoison");
+		if (entity instanceof EnderDragon) {
+			return "ender_dragon";
 		}
-		else if(event.getCause() == DamageCause.STARVATION) {
-			lastPlayerDamage.put(player.getName(), "&6starvation");
+		if (entity instanceof Enderman) {
+			return "enderman";
 		}
-		else if(event.getCause() == DamageCause.SUFFOCATION) {
-			lastPlayerDamage.put(player.getName(), "&7suffocation");
+		if (entity instanceof Ghast) {
+			return "ghast";
 		}
-		else if(event.getCause() == DamageCause.SUICIDE) {
-			lastPlayerDamage.put(player.getName(), "&3suicide");
+		if (entity instanceof Giant) {
+			return "giant";
 		}
-		else if(event.getCause() == DamageCause.VOID) {
-			lastPlayerDamage.put(player.getName(), "the &3void");
+		if (entity instanceof MagmaCube) {
+			return "magma_cube";
 		}
-		else if(event.getCause() == DamageCause.PROJECTILE) {
-			lastPlayerDamage.put(player.getName(), "a &fskeleton");
+		if (entity instanceof MushroomCow) {
+			return "mushroom_cow";
 		}
-		else {
-			lastPlayerDamage.put(player.getName(), "&5mysterious forces");
+		if (entity instanceof Pig) {
+			return "pig";
 		}
+		if (entity instanceof PigZombie) {
+			return "pig_zombie";
+		}
+		if (entity instanceof Sheep) {
+			return "sheep";
+		}
+		if (entity instanceof Skeleton) {
+			return "skeleton";
+		}
+		if (entity instanceof Slime) {
+			return "slime";
+		}
+		if (entity instanceof Silverfish) {
+			return "silverfish";
+		}
+		if (entity instanceof Snowman) {
+			return "snowman";
+		}
+		if (entity instanceof Spider) {
+			return "spider";
+		}
+		if (entity instanceof Squid) {
+			return "squid";
+		}
+		if (entity instanceof Villager) {
+			return "villager";
+		}
+		if (entity instanceof Zombie) {
+			return "zombie";
+		}
+		if (entity instanceof Wolf) {
+			return "wolf";
+		}
+		if (entity instanceof IronGolem) {
+			return "iron_golem";
+		}
+		
+		return "";
 	}
 	
 	// an internal class for ticking away deathbans

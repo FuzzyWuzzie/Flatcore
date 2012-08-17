@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore;
 
+import com.mcnsa.flatcore.listeners.EntityListener;
 import com.mcnsa.flatcore.listeners.PlayerListener;
 import com.mcnsa.flatcore.managers.ChallengeManager;
 import com.mcnsa.flatcore.managers.CommandManager;
@@ -34,6 +35,7 @@ public class Flatcore extends JavaPlugin {
 	
 	// listeners
 	public PlayerListener playerListener = null;
+	public EntityListener entityListener = null;
 	
 	// persistance
 	public PersistanceManager persistanceManager = null;
@@ -68,6 +70,7 @@ public class Flatcore extends JavaPlugin {
 		// load stuff up
 		random = new Random(System.currentTimeMillis());
 		playerListener = new PlayerListener(this);
+		entityListener = new EntityListener(this);
 		stateManager = new StateManager(this);
 		challengeManager = new ChallengeManager(this);
 		

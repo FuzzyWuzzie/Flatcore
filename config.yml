@@ -4,7 +4,7 @@ spawn-radius: 10000
 disable-pvp: true
 lose-inventory-on-death: true
 death-ban-time: 12h
-mod-death-ban-time: 10m
+mod-death-ban-time: 5m
 thunder-death: true
 broadcast-death: true
 broadcast-death-message: "&4#player was killed by #deathreason and is death-banned for &9#deathbantime"

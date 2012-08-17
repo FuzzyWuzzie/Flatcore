@@ -11,13 +11,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -197,6 +198,15 @@ public class PlayerListener implements Listener {
 		}
 	}
 	
+	// make sure we can't be targeted if we are immortal
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityTarget(EntityTargetEvent event) {
+		if((event.getTarget() instanceof Player) && !plugin.stateManager.isMortal((Player)event.getTarget())) {
+			// nope, we're immortal. Can't target us!
+			event.setCancelled(true);
+		}
+	}
+	
 	// handle chatting (when editing challenges)
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void chatHandler(AsyncPlayerChatEvent event) {
@@ -215,12 +225,12 @@ public class PlayerListener implements Listener {
 	
 	// disable quit messages if they're death-banned
 	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event) {
+	public void onPlayerKick(PlayerKickEvent event) {
 		// determine if they're death-banned
 		if(plugin.stateManager.deathBanTime(event.getPlayer()) > 0L) {
 			// yup, death-banned!
 			// cancel the quit message
-			event.setQuitMessage("");
+			event.setLeaveMessage("");
 		}
 	}
 	

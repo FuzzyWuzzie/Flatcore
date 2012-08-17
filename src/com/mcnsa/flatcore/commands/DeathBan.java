@@ -52,9 +52,7 @@ public class DeathBan implements Command {
 			// broadcast?
 			if(plugin.config.options.broadcastDeath) {
 				// format the message
-				String message = plugin.config.options.broadcastDeathMessage.replaceAll("#player", targetPlayer.getName());
-				message = message.replaceAll("#deathreason", "an angry mod");
-				message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.stateManager.deathBanTime(targetPlayer)));
+				String message = plugin.stateManager.getBroadcastDeathMessage(targetName);
 				message = ColourHandler.processColours(message);
 				
 				// loop through all players
@@ -81,7 +79,7 @@ public class DeathBan implements Command {
 			
 			// send a private message
 			String message = plugin.config.options.privateDeathMessage.replaceAll("#player", targetPlayer.getName());
-			message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(targetPlayer));
+			message = message.replaceAll("#deathreason", plugin.stateManager.getDeathReason(targetName));
 			message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.stateManager.deathBanTime(targetPlayer)));
 			message = ColourHandler.processColours(message);
 			targetPlayer.sendMessage(message);

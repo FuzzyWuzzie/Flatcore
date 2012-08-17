@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore.managers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.TimerTask;
@@ -183,14 +184,13 @@ public class StateManager {
 	// update whatever hit the player last
 	public void setLastDamage(Player player, EntityDamageEvent event) {
 		String causeOfDeath = new String("");
-		Player killer = player;
+		Player killer = null;
 		String murderWeapon = new String("");
 		if(event instanceof EntityDamageByEntityEvent) {
 			Entity damager = ((EntityDamageByEntityEvent)event).getDamager();
 			if(damager instanceof Player) {
 				if(((Player)damager).getItemInHand().getType().equals(Material.AIR)) {
-					causeOfDeath = "pvp";
-					murderWeapon = "fists";
+					causeOfDeath = "pvp_fists";
 				}
 				else {
 					causeOfDeath = "pvp";
@@ -200,7 +200,7 @@ public class StateManager {
 			}
 			else if (damager instanceof Creature || damager instanceof Slime) {
 				if (damager instanceof Tameable && ((Tameable)damager).isTamed()) {
-					causeOfDeath = "pvp";
+					causeOfDeath = "pvp_tamed";
 					murderWeapon = getEntityType(damager).toString();
 					killer = (Player)((Tameable) damager).getOwner();
 				}
@@ -244,7 +244,7 @@ public class StateManager {
 		}
 
 		// update their damage
-		String damage = causeOfDeath + ":" + murderWeapon + ":" + killer.getName();
+		String damage = causeOfDeath.toLowerCase() + ":" + (murderWeapon.equals("") ? " " : murderWeapon) + ":" + (killer != null ? killer.getName() : " ");
 		lastPlayerDamage.put(player.getName(), damage);
 	}
 	
@@ -323,6 +323,46 @@ public class StateManager {
 		}
 		
 		return "";
+	}
+	
+	// the string that tells people how someone died
+	public String getBroadcastDeathMessage(String player) {
+		if(!lastPlayerDamage.containsKey(player)) {
+			return "";
+		}
+		
+		String damage = lastPlayerDamage.get(player);
+		String damageParts[] = damage.split(":", 3);
+		if(damageParts.length != 3) {
+			return "";
+		}
+
+		// pick a random option
+		ArrayList<String> messageOptions = plugin.config.options.deathMessages.get(damageParts[0].replaceAll("_", "-"));
+		String message = messageOptions.get(plugin.random.nextInt(messageOptions.size()));
+		
+		// do some replacements
+		message = message.replaceAll("%n", player);
+		message = message.replaceAll("%a", damageParts[2]);
+		message = message.replaceAll("%i", damageParts[1]);
+		
+		// and send it out!
+		return message;
+	}
+	
+	// the string that tells a player why they died
+	public String getDeathReason(String player) {
+		if(!lastPlayerDamage.containsKey(player)) {
+			return "";
+		}
+		
+		String damage = lastPlayerDamage.get(player);
+		String damageParts[] = damage.split(":", 3);
+		if(damageParts.length != 3) {
+			return "";
+		}
+		
+		return damageParts[0].replaceAll("-", " ").toLowerCase();
 	}
 	
 	// an internal class for ticking away deathbans

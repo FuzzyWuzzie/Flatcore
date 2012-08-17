@@ -1,5 +1,11 @@
 package com.mcnsa.flatcore.managers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.mcnsa.flatcore.Flatcore;
@@ -13,6 +19,7 @@ public class ConfigManager {
 	}
 
 	// load the configuration
+	@SuppressWarnings("unchecked")
 	public Boolean load(FileConfiguration config) {
 		// load the spawn center
 		options.spawnX = config.getInt("spawn-center-x", 0);
@@ -47,10 +54,6 @@ public class ConfigManager {
 		// should we broadcast deaths to the entire server?
 		options.broadcastDeath = config.getBoolean("broadcast-death", true);
 		
-		// get the death messages
-		options.broadcastDeathMessage = config.getString("broadcast-death-message", "&4#player was killed by &c#deathreason");
-		options.privateDeathMessage = config.getString("private-death-message", "&4You've been killed by &c#deathreason &4and are now death-banned for &9#deathbantime&4. We'll see you then!");
-		
 		// get the deathban message (for when they try to join and are still banned)
 		options.deathbanMessage = config.getString("deathban-message", "Sorry, #deathreason killed you and you're still banned for #deathbantime");
 		
@@ -74,6 +77,15 @@ public class ConfigManager {
 		// get the spawn mortality message
 		options.spawnMortalityMessage = config.getString("spawn-mortality-message", "&cYou're no longer immortal! Good Luck!");
 		
+		// load the death messages
+		ConfigurationSection deathMessageSection = config.getConfigurationSection("death-messages");
+		Set<String> deathTypes = deathMessageSection.getKeys(false);
+		Iterator<String> i = deathTypes.iterator();
+		while(i.hasNext()) {
+			String type = i.next();
+			options.deathMessages.put(type, (ArrayList<String>)deathMessageSection.getList(type));
+		}
+		
 		// successful
 		return true;
 	}
@@ -89,12 +101,12 @@ public class ConfigManager {
 		public Long modDeathBanTime = new Long(600);
 		public Boolean thunderDeath = new Boolean(true);
 		public Boolean broadcastDeath = new Boolean(true);
-		public String broadcastDeathMessage = new String("&4#player was killed by #deathreason");
 		public String privateDeathMessage = new String("&4You've been killed by #deathreason &4and are now death-banned for &9#deathbantime&4. We'll see you then!");
 		public String deathbanMessage = new String("Sorry, #deathreason killed you and you're still banned for #deathbantime");
 		public Long spawnImmortalityTime = new Long(30);
 		public Long spawnImmortalityReminder = new Long(5);
 		public String spawnImmortalityMessage = new String("&aYou're immortal for #immortaltime!");
 		public String spawnMortalityMessage = new String("&cYou're no longer immortal! Good Luck!");
+		public HashMap<String, ArrayList<String>> deathMessages = new HashMap<String, ArrayList<String>>();
 	}
 }

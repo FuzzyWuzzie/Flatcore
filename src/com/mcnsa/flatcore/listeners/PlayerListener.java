@@ -61,7 +61,7 @@ public class PlayerListener implements Listener {
 			// get the text
 			String message = plugin.config.options.deathbanMessage;
 			// figure out why
-			message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(event.getPlayer()));
+			message = message.replaceAll("#deathreason", plugin.stateManager.getDeathReason(event.getPlayer().getName()));
 			// add the time
 			message = message.replaceAll("#deathbantime", plugin.formatTime(deathBanTime));
 			message = ColourHandler.stripColours(message);
@@ -118,9 +118,7 @@ public class PlayerListener implements Listener {
 		// broadcast?
 		if(plugin.config.options.broadcastDeath) {
 			// format the message
-			String message = plugin.config.options.broadcastDeathMessage.replaceAll("#player", event.getEntity().getName());
-			message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(event.getEntity()));
-			message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.stateManager.deathBanTime(event.getEntity())));
+			String message = plugin.stateManager.getBroadcastDeathMessage(event.getEntity().getName());
 			message = ColourHandler.processColours(message);
 			
 			// loop through all players
@@ -147,7 +145,7 @@ public class PlayerListener implements Listener {
 		
 		// send a private message
 		String message = plugin.config.options.privateDeathMessage.replaceAll("#player", event.getEntity().getName());
-		message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(event.getEntity()));
+		message = message.replaceAll("#deathreason", plugin.stateManager.getDeathReason(event.getEntity().getName()));
 		message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.stateManager.deathBanTime(event.getEntity())));
 		message = ColourHandler.processColours(message);
 		event.getEntity().sendMessage(message);

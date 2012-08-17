@@ -15,13 +15,13 @@ import com.mcnsa.flatcore.util.ColourHandler;
 
 public class StateManager {
 	// keep track of the last damage each player recieved
-	private HashMap<String, String> lastPlayerDamage = new HashMap<String, String>();
+	public HashMap<String, String> lastPlayerDamage = new HashMap<String, String>();
 	
 	// keep track of deathban times
-	private HashMap<String, Long> deathBanTimes = new HashMap<String, Long>();
+	public HashMap<String, Long> deathBanTimes = new HashMap<String, Long>();
 	
 	// keep track of immortality times
-	private HashMap<String, Long> immortalityTimes = new HashMap<String, Long>();
+	public HashMap<String, Long> immortalityTimes = new HashMap<String, Long>();
 	
 	Flatcore plugin = null;
 	public StateManager(Flatcore instance) {
@@ -39,7 +39,7 @@ public class StateManager {
 	}
 	
 	// check whether a player has ever logged in
-	// and update their login stati
+	// and update their login status
 	public Boolean newPlayer(Player player) {
 		boolean exists = deathBanTimes.containsKey(player.getName());
 		deathBanTimes.put(player.getName(), 0L);

@@ -3,6 +3,7 @@ package com.mcnsa.flatcore;
 import com.mcnsa.flatcore.listeners.PlayerListener;
 import com.mcnsa.flatcore.managers.CommandManager;
 import com.mcnsa.flatcore.managers.ConfigManager;
+import com.mcnsa.flatcore.managers.PersistanceManager;
 import com.mcnsa.flatcore.managers.StateManager;
 import com.mcnsa.flatcore.util.*;
 
@@ -31,6 +32,9 @@ public class Flatcore extends JavaPlugin {
 	
 	// listeners
 	public PlayerListener playerListener = null;
+	
+	// persistance
+	public PersistanceManager persistanceManager = null;
 	
 	// now everything else
 	public StateManager stateManager = null;
@@ -61,6 +65,10 @@ public class Flatcore extends JavaPlugin {
 		playerListener = new PlayerListener(this);
 		stateManager = new StateManager(this);
 		
+		// load persistance
+		persistanceManager = new PersistanceManager(this);
+		persistanceManager.readPersistance();
+		
 		// start the ticker timer
 		tickerTimer = new Timer();
 		tickerTimer.scheduleAtFixedRate(stateManager.new TickerTask(stateManager), 0, 1000);
@@ -69,7 +77,10 @@ public class Flatcore extends JavaPlugin {
 		log("plugin enabled!");
 	}
 
-	public void onDisable() {		
+	public void onDisable() {
+		// save persistance
+		persistanceManager.writePersistance();
+		
 		// shut the plugin down
 		log("plugin disabled!");
 	}

@@ -7,7 +7,6 @@ import com.mcnsa.flatcore.util.*;
 
 @CommandInfo(alias = "challenge", permission = "challenge", usage = "[number]", description = "lists weekly challenges")
 public class Challenge implements Command {
-	@SuppressWarnings("unused")
 	private static Flatcore plugin = null;
 	public Challenge(Flatcore instance) {
 		plugin = instance;
@@ -32,14 +31,12 @@ public class Challenge implements Command {
 		}
 		
 		// figure out the latest week number if necessary
-		if(challengeNumber < 0) {
-			// TODO
-			challengeNumber = 1;
+		if(challengeNumber < 1) {
+			challengeNumber = plugin.challengeManager.latestChallengeNumber();
 		}
 		
 		// ok, now access the challenge given by this week
-		// ?
-		String challengeText = "Open an inter-dimensional rift (Nether Portal), eliminate 64 aliens (Collect 32 Ender Pearls, and 32 Gunpowder), collapse the rift (How you do this is up to you!), and go into stasis (sleep in a bed). Put a satellite in orbit to prevent any other portals forming (Build a small structure 250 blocks in the air).";
+		String challengeText = plugin.challengeManager.getChallenge(challengeNumber);
 		// massage the text to eliminate multiple consequetive spaces
 		challengeText = challengeText.trim().replaceAll("\\s+", " ");
 		

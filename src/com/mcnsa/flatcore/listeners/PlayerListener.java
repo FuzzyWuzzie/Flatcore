@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -192,6 +193,22 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
+		}
+	}
+	
+	// handle chatting (when editing challenges)
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void chatHandler(AsyncPlayerChatEvent event) {
+		// see if they're editing a challenge
+		if(plugin.challengeManager.isEditingChallenge(event.getPlayer())) {
+			// capture their chat
+			plugin.challengeManager.appendChallenge(event.getPlayer(), event.getMessage());
+			
+			// cancel it
+			event.setCancelled(true);
+			
+			// and send it back to them in green so they know it was captured
+			ColourHandler.sendMessage(event.getPlayer(), "&a" + event.getMessage());
 		}
 	}
 	

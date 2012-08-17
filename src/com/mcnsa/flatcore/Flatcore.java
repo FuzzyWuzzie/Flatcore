@@ -1,6 +1,7 @@
 package com.mcnsa.flatcore;
 
 import com.mcnsa.flatcore.listeners.PlayerListener;
+import com.mcnsa.flatcore.managers.ChallengeManager;
 import com.mcnsa.flatcore.managers.CommandManager;
 import com.mcnsa.flatcore.managers.ConfigManager;
 import com.mcnsa.flatcore.managers.PersistanceManager;
@@ -39,6 +40,7 @@ public class Flatcore extends JavaPlugin {
 	// now everything else
 	public StateManager stateManager = null;
 	public Timer tickerTimer = null;
+	public ChallengeManager challengeManager = null;
 
 	public void onEnable() {
 		// set up permissions
@@ -64,6 +66,7 @@ public class Flatcore extends JavaPlugin {
 		// load stuff up
 		playerListener = new PlayerListener(this);
 		stateManager = new StateManager(this);
+		challengeManager = new ChallengeManager(this);
 		
 		// load persistance
 		persistanceManager = new PersistanceManager(this);

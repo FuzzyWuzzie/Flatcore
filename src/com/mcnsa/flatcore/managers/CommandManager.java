@@ -28,6 +28,10 @@ public class CommandManager {
 		// TODO: dynamically load commands ALA CommandBook
 		//plugin.debug("registering commands...");
 		registerCommand(new Challenge(plugin));
+		registerCommand(new DeathBan(plugin));
+		registerCommand(new StartChallenge(plugin));
+		registerCommand(new StopChallenge(plugin));
+		registerCommand(new Help(plugin));
 		//plugin.debug("commands all registered!");
 	}
 

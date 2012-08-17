@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +47,12 @@ public class PersistanceManager {
 			// immortalities
 			obj.put("immortality", plugin.stateManager.immortalityTimes);
 			
+			// challenges
+			obj.put("challenges", plugin.challengeManager.challenges);
+			
+			// challenges currently being edited
+			obj.put("editingChallenges", plugin.challengeManager.editingChallenges);
+			
 			// and save it!
 			out.print(obj);			
 			out.close();
@@ -75,6 +82,8 @@ public class PersistanceManager {
 				plugin.stateManager.lastPlayerDamage = (HashMap<String, String>)obj.get("lastDamage");
 				plugin.stateManager.deathBanTimes = (HashMap<String, Long>)obj.get("deathBans");
 				plugin.stateManager.immortalityTimes = (HashMap<String, Long>)obj.get("immortality");
+				plugin.challengeManager.challenges = (ArrayList<String>)obj.get("challenges");
+				plugin.challengeManager.editingChallenges = (HashMap<String, String>)obj.get("editingChallenges");
 			}
 		}
 		catch(Exception e) {

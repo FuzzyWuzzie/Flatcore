@@ -5,12 +5,19 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.commands.*;
 import com.mcnsa.flatcore.util.ColourHandler;
 import com.mcnsa.flatcore.util.Command;
 import com.mcnsa.flatcore.util.CommandInfo;
+import com.mcnsa.flatcore.util.DynamicPluginCommand;
+import com.mcnsa.flatcore.util.ReflectionUtil;
 
 import com.mcnsa.flatcore.Flatcore;
 
@@ -22,18 +29,24 @@ public class CommandManager {
 	public HashMap<String, InternalCommand> commands = new HashMap<String, InternalCommand>();
 
 	public CommandManager(Flatcore instance) {
-		plugin = instance;
-
-		// develop the list of all commands here!
-		// TODO: dynamically load commands ALA CommandBook
-		//plugin.debug("registering commands...");
+		plugin = instance;		
 		registerCommand(new Challenge(plugin));
 		registerCommand(new DeathBan(plugin));
 		registerCommand(new StartChallenge(plugin));
+		registerCommand(new AppendChallenge(plugin));
 		registerCommand(new StopChallenge(plugin));
 		registerCommand(new Help(plugin));
 		registerCommand(new Reload(plugin));
-		//plugin.debug("commands all registered!");
+	}
+	
+	// get bukkit's command map
+	public CommandMap getCommandMap() {
+		CommandMap commandMap = ReflectionUtil.getField(plugin.getServer().getPluginManager(), "commandMap");
+		if (commandMap == null) {
+			plugin.error("Could not retrieve server CommandMap! Console cannot use commands!");
+			commandMap = new SimpleCommandMap(Bukkit.getServer());
+		}
+		return commandMap;
 	}
 
 	// register new command
@@ -53,6 +66,13 @@ public class CommandManager {
 				InternalCommand ic = new InternalCommand(ci.alias(), ci.permission(), ci.usage(), ci.description(), ci.visible(), command);
 				commands.put(ci.alias(), ic);
 				
+				// prepare to register bukkit commands
+				DynamicPluginCommand cmd = new DynamicPluginCommand(ci.alias(), ci.usage(), ci.description(), plugin);
+				// get the command map
+				CommandMap commandMap = getCommandMap();
+				// and register the bukkit command
+				commandMap.register(ci.alias(), cmd);
+				
 				// we're done
 				return;
 			}
@@ -60,7 +80,7 @@ public class CommandManager {
 	}
 	
 	// handle commands
-	public Boolean handleCommand(Player player, String command) {
+	public Boolean handleCommand(CommandSender sender, String command) {
 		// get the actual command
 		//plugin.debug(player.getName() + " sent command: " + command);
 		
@@ -85,12 +105,15 @@ public class CommandManager {
 		}
 		
 		// make sure they have permission first
-		if(!commands.get(tokens[0]).permissions.equals("") && !plugin.hasPermission(player, commands.get(tokens[0]).permissions)) {
-			// return a message if they don't have permission
-			plugin.log(player.getName() + " attempted to use command: " + tokens[0] + " without permission!");
-			ColourHandler.sendMessage(player, "&cYou don't have permission to do that!");
-			// we handled it, but they don't have perms
-			return true;
+		// they definitely have permission on the console
+		if(!(sender instanceof ConsoleCommandSender)) {
+			if(!commands.get(tokens[0]).permissions.equals("") && !plugin.hasPermission((Player)sender, commands.get(tokens[0]).permissions)) {
+				// return a message if they don't have permission
+				plugin.log(((Player)sender).getName() + " attempted to use command: " + tokens[0] + " without permission!");
+				ColourHandler.sendMessage((Player)sender, "&cYou don't have permission to do that!");
+				// we handled it, but they don't have perms
+				return true;
+			}
 		}
 		
 		// we have the command, send it in!
@@ -104,7 +127,7 @@ public class CommandManager {
 		}
 		
 		// and handle the command!
-		if(commands.get(tokens[0]).command.handle(player, sArgs.trim())) {
+		if(commands.get(tokens[0]).command.handle(sender, sArgs.trim())) {
 			// we handled it!
 			//plugin.debug("command " + tokens[0] + " handled successfully!");
 			return true;
@@ -112,7 +135,7 @@ public class CommandManager {
 		
 		// they didn't use it properly! let them know!
 		//plugin.debug("command " + tokens[0] + " NOT handled successfully");
-		ColourHandler.sendMessage(player, "&cInvalid usage! &aCorrect usage: &3/" + commands.get(tokens[0]).alias + " &b" + commands.get(tokens[0]).usage + " &7(" + commands.get(tokens[0]).description + ")");
+		ColourHandler.sendMessage(sender, "&cInvalid usage! &aCorrect usage: &3/" + commands.get(tokens[0]).alias + " &b" + commands.get(tokens[0]).usage + " &7(" + commands.get(tokens[0]).description + ")");
 		return true;
 	}
 	

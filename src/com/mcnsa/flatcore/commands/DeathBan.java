@@ -2,6 +2,7 @@ package com.mcnsa.flatcore.commands;
 
 import java.util.Arrays;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.Flatcore;
@@ -15,7 +16,7 @@ public class DeathBan implements Command {
 	}
 	
 	@Override
-	public Boolean handle(Player player, String sArgs) {
+	public Boolean handle(CommandSender player, String sArgs) {
 		// extract the args
 		String[] args = sArgs.split("\\s+");
 		if(args.length != 2) {

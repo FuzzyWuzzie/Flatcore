@@ -1,6 +1,6 @@
 package com.mcnsa.flatcore.commands;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import com.mcnsa.flatcore.Flatcore;
 import com.mcnsa.flatcore.util.*;
@@ -13,7 +13,7 @@ public class Challenge implements Command {
 	}
 	
 	@Override
-	public Boolean handle(Player player, String sArgs) {
+	public Boolean handle(CommandSender player, String sArgs) {
 		// store the challenge number that we want to access
 		Integer challengeNumber = -1;
 	

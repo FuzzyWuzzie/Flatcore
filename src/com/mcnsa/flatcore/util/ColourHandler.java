@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.command.ColouredConsoleSender;
 import org.bukkit.entity.Player;
 
@@ -130,6 +131,15 @@ public class ColourHandler {
 	
 	public static void sendMessage(Player player, String message) {
 		player.sendMessage(processColours(message));
+	}
+	
+	public static void sendMessage(CommandSender sender, String message) {
+		if(sender instanceof Player) {
+			sender.sendMessage(processColours(message));
+		}
+		else {
+			consoleMessage(message);
+		}
 	}
 	
 	public static void sendMessage(JavaPlugin plugin, String name, String message) {

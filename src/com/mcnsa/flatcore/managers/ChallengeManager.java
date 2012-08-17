@@ -3,8 +3,6 @@ package com.mcnsa.flatcore.managers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.entity.Player;
-
 import com.mcnsa.flatcore.Flatcore;
 
 public class ChallengeManager {
@@ -36,42 +34,42 @@ public class ChallengeManager {
 	}
 	
 	// start editing a challenge
-	public Boolean startChallenge(Player player, Integer id) {
+	public Boolean startChallenge(String player, Integer id) {
 		// make sure we have a valid id
 		if(id < 1) {
 			return false;
 		}
 		// add it to the list
-		editingChallenges.put(player.getName(), (id-1) + ":");
+		editingChallenges.put(player, (id-1) + ":");
 		return true;
 	}
 	
-	public Boolean isEditingChallenge(Player player) {
-		return editingChallenges.containsKey(player.getName());
+	public Boolean isEditingChallenge(String player) {
+		return editingChallenges.containsKey(player);
 	}
 	
-	public void appendChallenge(Player player, String text) {
+	public void appendChallenge(String player, String text) {
 		// make sure we're actually editing something
 		if(!isEditingChallenge(player)) {
 			return;
 		}
 		
 		// ok, append it
-		editingChallenges.put(player.getName(), editingChallenges.get(player.getName()) + text + " ");
+		editingChallenges.put(player, editingChallenges.get(player) + text + " ");
 	}
 	
 	// stop editing a challenge
-	public Integer stopChallenge(Player player) {
+	public Integer stopChallenge(String player) {
 		// make sure we're actually editing something
 		if(!isEditingChallenge(player)) {
 			return -1;
 		}
 		
 		// strip out the id and ":" at the beginning
-		String[] parts = editingChallenges.get(player.getName()).split(":", 2);
+		String[] parts = editingChallenges.get(player).split(":", 2);
 		if(parts.length != 2) {
 			// stop editing
-			editingChallenges.remove(player.getName());
+			editingChallenges.remove(player);
 			return -2;
 		}
 
@@ -95,7 +93,7 @@ public class ChallengeManager {
 		}
 		
 		// stop editing
-		editingChallenges.remove(player.getName());
+		editingChallenges.remove(player);
 		
 		return id;
 	}

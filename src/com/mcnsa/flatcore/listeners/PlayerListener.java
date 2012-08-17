@@ -203,9 +203,9 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void chatHandler(AsyncPlayerChatEvent event) {
 		// see if they're editing a challenge
-		if(plugin.challengeManager.isEditingChallenge(event.getPlayer())) {
+		if(plugin.challengeManager.isEditingChallenge(event.getPlayer().getName())) {
 			// capture their chat
-			plugin.challengeManager.appendChallenge(event.getPlayer(), event.getMessage());
+			plugin.challengeManager.appendChallenge(event.getPlayer().getName(), event.getMessage());
 			
 			// cancel it
 			event.setCancelled(true);

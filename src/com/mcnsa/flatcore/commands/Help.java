@@ -2,6 +2,8 @@ package com.mcnsa.flatcore.commands;
 
 import java.util.ArrayList;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.Flatcore;
@@ -16,7 +18,7 @@ public class Help implements Command {
 	}
 	
 	@Override
-	public Boolean handle(Player player, String sArgs) {
+	public Boolean handle(CommandSender player, String sArgs) {
 		// see if we have args
 		sArgs = sArgs.trim();
 		//plugin.debug("sArgs: " + sArgs);
@@ -39,7 +41,7 @@ public class Help implements Command {
 		ArrayList<InternalCommand> permCommands = new ArrayList<InternalCommand>();
 		for(int i = 0; i < commands.length; i++) {
 			//plugin.debug("making sure we have permissions");
-			if(commands[i].permissions.equals("") || plugin.hasPermission(player, commands[i].permissions)) {
+			if(commands[i].permissions.equals("") || (player instanceof ConsoleCommandSender || plugin.hasPermission((Player)player, commands[i].permissions))) {
 				//plugin.debug("player has permission for " + commands[i].alias + ", adding");
 				permCommands.add(commands[i]);
 			}

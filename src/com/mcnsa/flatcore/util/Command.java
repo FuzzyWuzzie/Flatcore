@@ -1,7 +1,7 @@
 package com.mcnsa.flatcore.util;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 public interface Command {
-	public Boolean handle(Player player, String sArgs);
+	public Boolean handle(CommandSender player, String sArgs);
 }

@@ -123,6 +123,12 @@ public class PlayerListener implements Listener {
 		message = ColourHandler.processColours(message);
 		event.getEntity().sendMessage(message);
 		
+		// send some thunder and lightning
+		if(plugin.config.options.thunderDeath) {
+			// strike that shit!
+			event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
+		}
+		
 		// deathban
 		// TODO:
 	}

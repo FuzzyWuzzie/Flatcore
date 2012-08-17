@@ -14,6 +14,7 @@ public class Reload implements Command {
 	
 	@Override
 	public Boolean handle(CommandSender player, String sArgs) {
+		plugin.reloadConfig();
 		if(!plugin.config.load(plugin.getConfig())) {
 			// shit
 			// BAIL

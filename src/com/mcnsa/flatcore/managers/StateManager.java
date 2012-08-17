@@ -119,7 +119,7 @@ public class StateManager {
 					// check to see if we should be reminding them
 					if((plugin.config.options.spawnImmortalityTime - immortalityTimes.get(playerName)) % plugin.config.options.spawnImmortalityReminder == 0) {
 						String message = plugin.config.options.spawnImmortalityMessage;
-						message = message.replaceAll("#immortaltime", plugin.formatTime(plugin.config.options.spawnImmortalityTime));
+						message = message.replaceAll("#immortaltime", plugin.formatTime(immortalityTimes.get(playerName)));
 						message = ColourHandler.processColours(message);
 						player.sendMessage(message);
 					}

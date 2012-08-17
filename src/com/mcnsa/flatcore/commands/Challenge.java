@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import com.mcnsa.flatcore.Flatcore;
 import com.mcnsa.flatcore.util.*;
 
-@CommandInfo(alias = "challenge", permission = "flatcore.challenge", usage = "[number]", description = "lists weekly challenges")
+@CommandInfo(alias = "challenge", permission = "challenge", usage = "[number]", description = "lists weekly challenges")
 public class Challenge implements Command {
 	@SuppressWarnings("unused")
 	private static Flatcore plugin = null;

@@ -5,10 +5,10 @@ import org.bukkit.command.CommandSender;
 import com.mcnsa.flatcore.Flatcore;
 import com.mcnsa.flatcore.util.*;
 
-@CommandInfo(alias = "stopchallenge", permission = "setchallenge", usage = "", description = "stops writing weekly challenges")
-public class StopChallenge implements Command {
+@CommandInfo(alias = "endchallenge", permission = "setchallenge", usage = "", description = "stops writing weekly challenges")
+public class EndChallenge implements Command {
 	private static Flatcore plugin = null;
-	public StopChallenge(Flatcore instance) {
+	public EndChallenge(Flatcore instance) {
 		plugin = instance;
 	}
 	

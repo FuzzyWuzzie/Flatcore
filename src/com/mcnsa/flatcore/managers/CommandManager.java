@@ -34,7 +34,7 @@ public class CommandManager {
 		registerCommand(new DeathBan(plugin));
 		registerCommand(new StartChallenge(plugin));
 		registerCommand(new AppendChallenge(plugin));
-		registerCommand(new StopChallenge(plugin));
+		registerCommand(new EndChallenge(plugin));
 		registerCommand(new Help(plugin));
 		registerCommand(new Reload(plugin));
 	}

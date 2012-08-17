@@ -157,7 +157,7 @@ public class PlayerListener implements Listener {
 	}
 	
 	// handle chatting (when editing challenges)
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void chatHandler(AsyncPlayerChatEvent event) {
 		// see if they're editing a challenge
 		if(plugin.challengeManager.isEditingChallenge(event.getPlayer().getName())) {

@@ -24,7 +24,7 @@ A plugin for implementing all the various things necessary for flatcore
 * `/deathban <player> <time>` - set's a player's deathban. If they're not currently death-banned, it will death-ban them for a given time. Time in XwXdXhXmXs format
 * `/startchallenge [id]` - starts you writing a weekly challenge ([id] is optional, if excluded a new challenge will be inserted). All chat you send to the server after sending this command will be appended to the challenge
 * `/appendchallenge <text>` - explicitely adds text to the currently edited challenge (implemented for console use)
-* `/stopchallenge` - stops writing a weekly challenge. All the chat text you've been accumulating in the challenge thing gets collected, and inserted as either an edited or new weekly challenge based on what ID you were editing
+* `/endchallenge` - stops writing a weekly challenge. All the chat text you've been accumulating in the challenge thing gets collected, and inserted as either an edited or new weekly challenge based on what ID you were editing
 * `/flatreload` - reloads the flatcore config file
 
 ## Permissions
@@ -32,7 +32,7 @@ A plugin for implementing all the various things necessary for flatcore
 * flatcore.mod - has a modified deathban time
 * flatcore.help - can use the `/flathelp` command
 * flatcore.challenge - can use the `/challenge` command
-* flatcore.setchallenge - can use the `/startchallenge`, `/appendchallenge`, and `/stopchallenge` commands
+* flatcore.setchallenge - can use the `/startchallenge`, `/appendchallenge`, and `/endchallenge` commands
 * flatcore.deathban - can use the `/deathban` command
 * flatcore.reload - can use the `/flatreload` command
 

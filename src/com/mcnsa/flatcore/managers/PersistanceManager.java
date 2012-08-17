@@ -80,10 +80,25 @@ public class PersistanceManager {
 			// grab the objects
 			if(obj != null) {
 				plugin.stateManager.lastPlayerDamage = (HashMap<String, String>)obj.get("lastDamage");
+				if(plugin.stateManager.lastPlayerDamage == null) {
+					plugin.stateManager.lastPlayerDamage = new HashMap<String, String>();
+				}
 				plugin.stateManager.deathBanTimes = (HashMap<String, Long>)obj.get("deathBans");
+				if(plugin.stateManager.deathBanTimes == null) {
+					plugin.stateManager.deathBanTimes = new HashMap<String, Long>();
+				}
 				plugin.stateManager.immortalityTimes = (HashMap<String, Long>)obj.get("immortality");
+				if(plugin.stateManager.immortalityTimes == null) {
+					plugin.stateManager.immortalityTimes = new HashMap<String, Long>();
+				}
 				plugin.challengeManager.challenges = (ArrayList<String>)obj.get("challenges");
+				if(plugin.challengeManager.challenges == null) {
+					plugin.challengeManager.challenges = new ArrayList<String>();
+				}
 				plugin.challengeManager.editingChallenges = (HashMap<String, String>)obj.get("editingChallenges");
+				if(plugin.challengeManager.editingChallenges == null) {
+					plugin.challengeManager.editingChallenges = new HashMap<String, String>();
+				}
 			}
 		}
 		catch(Exception e) {

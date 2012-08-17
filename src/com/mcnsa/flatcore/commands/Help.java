@@ -62,9 +62,9 @@ public class Help implements Command {
 		
 		// and dispense the help!
 		//plugin.debug("dispensing help");
-		ColourHandler.sendMessage(player, "&7--- &fFlatcore Help &7- &fPage &e" + (page + 1) + "&7/&e" + totalPages + " &f---");
+		ColourHandler.sendMessage(player, "&7--- &aFlatcore Help &7- &fPage &f" + (page + 1) + "&7/&f" + totalPages + " &f---");
 		for(int i = start; i < end; i++) {
-			ColourHandler.sendMessage(player, "&f/" + permCommands.get(i).alias + " &e" + permCommands.get(i).usage);
+			ColourHandler.sendMessage(player, "&a/" + permCommands.get(i).alias + " &f" + permCommands.get(i).usage);
 			ColourHandler.sendMessage(player, "    &7" + permCommands.get(i).description);
 		}
 		

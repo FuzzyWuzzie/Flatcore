@@ -40,9 +40,9 @@ A plugin for implementing all the various things necessary for flatcore
 	disable-pvp: true
 	# does the player's inventory get destroyed when they die?
 	lose-inventory-on-death: true
-	# how long normal players are death-banned for
+	# how long normal players are death-banned for. Time in XwXdXhXmXs format
 	death-ban-time: 12h
-	# how long mods are death-banned for
+	# how long mods are death-banned for. Time in XwXdXhXmXs format
 	mod-death-ban-time: 5m
 	# should lightning strike where a player dies?
 	thunder-death: true
@@ -54,9 +54,9 @@ A plugin for implementing all the various things necessary for flatcore
 	private-death-message: "&4You've been killed by #deathreason &4and are now death-banned for &9#deathbantime&4. We'll see you then!"
 	# What to say when someone tries to join the server but is still deathbanned
 	deathban-message: "Sorry, #deathreason killed you and you're still banned for #deathbantime"
-	# How long players are immortal for after spawning
+	# How long players are immortal for after spawning. Time in XwXdXhXmXs format
 	spawn-immortality-time: 30s
-	# How often to remind players of how much immortality they have left
+	# How often to remind players of how much immortality they have left. Time in XwXdXhXmXs format
 	spawn-immortality-reminder: 5s
 	# The message that gets sent to a player when they're immortal
 	spawn-immortality-message: "&aYou're immortal for #immortaltime!"

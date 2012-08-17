@@ -1,6 +1,7 @@
 package com.mcnsa.flatcore.managers;
 
 import java.util.HashMap;
+import java.util.TimerTask;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.mcnsa.flatcore.Flatcore;
 
-public class DeathManager {
+public class StateManager {
 	// keep track of the last damage each player recieved
 	private HashMap<String, String> lastPlayerDamage = new HashMap<String, String>();
 	
@@ -18,7 +19,7 @@ public class DeathManager {
 	private HashMap<String, Long> deathBanTimes = new HashMap<String, Long>();
 	
 	Flatcore plugin = null;
-	public DeathManager(Flatcore instance) {
+	public StateManager(Flatcore instance) {
 		plugin = instance;
 	}
 	
@@ -33,13 +34,39 @@ public class DeathManager {
 	}
 	
 	// check whether a player has ever logged in
-	// and update their login status
+	// and update their login stati
 	public Boolean newPlayer(Player player) {
 		boolean exists = deathBanTimes.containsKey(player.getName());
 		deathBanTimes.put(player.getName(), 0L);
 		return !exists;
 	}
 	
+	// check how long a player is deathbanned for
+	public Long deathBanTime(Player player) {
+		if(deathBanTimes.containsKey(player.getName())) {
+			return deathBanTimes.get(player.getName());
+		}
+		return 0L;
+	}
+	
+	// apply a deathban to a player
+	public void deathBan(Player player) {
+		// TODO: check admin permissions
+		deathBanTimes.put(player.getName(), plugin.config.options.deathBanTime);
+	}
+	
+	// update the timers on death bans
+	// (subtract 1 each second that the server is running if a player has a positive
+	// death-ban time)
+	public void updateDeathBans() {
+		for(String player: deathBanTimes.keySet()) {
+			if(deathBanTimes.get(player) > 0L) {
+				deathBanTimes.put(player, deathBanTimes.get(player) - 1);
+			}
+		}
+	}
+	
+	// update whatever hit the player last
 	public void setLastDamage(Player player, EntityDamageEvent event) {
 		if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
 			lastPlayerDamage.put(player.getName(), "an &6EXPLOSION");
@@ -163,6 +190,26 @@ public class DeathManager {
 		}
 		else {
 			lastPlayerDamage.put(player.getName(), "&5mysterious forces");
+		}
+	}
+	
+	// an internal class for ticking away deathbans
+	public class TickerTask extends TimerTask {
+		private StateManager stateManager = null;
+		
+		public TickerTask(StateManager stateManager) {
+			this.stateManager = stateManager;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				// update things every second
+				stateManager.updateDeathBans();
+			}
+			catch(Exception e) {
+				stateManager.plugin.error("TickerTask crashed: " + e.getMessage());
+			}
 		}
 	}
 }

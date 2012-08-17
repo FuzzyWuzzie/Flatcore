@@ -13,6 +13,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -54,11 +56,31 @@ public class PlayerListener implements Listener {
 		return location;
 	}
 	
+	// handle pre-logging in (before actually joining)
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void playerLogin(PlayerLoginEvent event) {
+		// check to see if they're currently deathbanned
+		Long deathBanTime = plugin.stateManager.deathBanTime(event.getPlayer());
+		if(deathBanTime > 0) {
+			// yup, they're death-banned!			
+			// get the text
+			String message = plugin.config.options.deathbanMessage;
+			// figure out why
+			message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(event.getPlayer()));
+			// add the time
+			message = message.replaceAll("#deathbantime", plugin.formatTime(deathBanTime));
+			message = ColourHandler.stripColours(message);
+			
+			// now stop them!
+			event.disallow(Result.KICK_BANNED, message);
+		}
+	}
+	
 	// handle joining
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerJoin(PlayerJoinEvent event) {
 		// see if they're a new player or not
-		if(plugin.deathManager.newPlayer(event.getPlayer())) {
+		if(plugin.stateManager.newPlayer(event.getPlayer())) {
 			// randomize their spawning!
 			event.getPlayer().teleport(randomSpawn(event.getPlayer()));
 		}
@@ -96,7 +118,7 @@ public class PlayerListener implements Listener {
 		if(plugin.config.options.broadcastDeath) {
 			// format the message
 			String message = plugin.config.options.broadcastDeathMessage.replaceAll("#player", event.getEntity().getName());
-			message = message.replaceAll("#deathreason", plugin.deathManager.lastDamage(event.getEntity()));
+			message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(event.getEntity()));
 			message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.config.options.deathBanTime));
 			message = ColourHandler.processColours(message);
 			
@@ -116,21 +138,23 @@ public class PlayerListener implements Listener {
 			plugin.log(message);
 		}
 		
-		// send a private message
-		String message = plugin.config.options.privateDeathMessage.replaceAll("#player", event.getEntity().getName());
-		message = message.replaceAll("#deathreason", plugin.deathManager.lastDamage(event.getEntity()));
-		message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.config.options.deathBanTime));
-		message = ColourHandler.processColours(message);
-		event.getEntity().sendMessage(message);
-		
 		// send some thunder and lightning
 		if(plugin.config.options.thunderDeath) {
 			// strike that shit!
 			event.getEntity().getWorld().strikeLightningEffect(event.getEntity().getLocation());
 		}
 		
+		// send a private message
+		String message = plugin.config.options.privateDeathMessage.replaceAll("#player", event.getEntity().getName());
+		message = message.replaceAll("#deathreason", plugin.stateManager.lastDamage(event.getEntity()));
+		message = message.replaceAll("#deathbantime", plugin.formatTime(plugin.config.options.deathBanTime));
+		message = ColourHandler.processColours(message);
+		event.getEntity().sendMessage(message);
+		
 		// deathban
-		// TODO:
+		plugin.stateManager.deathBan(event.getEntity());
+		// and kick them
+		event.getEntity().kickPlayer(ColourHandler.stripColours(message));
 	}
 	
 	// handle damage / disabled pvp
@@ -139,7 +163,7 @@ public class PlayerListener implements Listener {
 		// make sure a player got damaged 
 		if(event.getEntity() instanceof Player) {
 			// set that player's last damage
-			plugin.deathManager.setLastDamage((Player)event.getEntity(), event);
+			plugin.stateManager.setLastDamage((Player)event.getEntity(), event);
 			
 			// see if another entity damaged them
 			if(event instanceof EntityDamageByEntityEvent) {

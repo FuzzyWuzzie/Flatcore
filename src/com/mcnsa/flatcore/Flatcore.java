@@ -3,9 +3,10 @@ package com.mcnsa.flatcore;
 import com.mcnsa.flatcore.listeners.PlayerListener;
 import com.mcnsa.flatcore.managers.CommandManager;
 import com.mcnsa.flatcore.managers.ConfigManager;
-import com.mcnsa.flatcore.managers.DeathManager;
+import com.mcnsa.flatcore.managers.StateManager;
 import com.mcnsa.flatcore.util.*;
 
+import java.util.Timer;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -32,7 +33,8 @@ public class Flatcore extends JavaPlugin {
 	public PlayerListener playerListener = null;
 	
 	// now everything else
-	public DeathManager deathManager = null;
+	public StateManager stateManager = null;
+	public Timer tickerTimer = null;
 
 	public void onEnable() {
 		// set up permissions
@@ -57,7 +59,11 @@ public class Flatcore extends JavaPlugin {
 		
 		// load stuff up
 		playerListener = new PlayerListener(this);
-		deathManager = new DeathManager(this);
+		stateManager = new StateManager(this);
+		
+		// start the ticker timer
+		tickerTimer = new Timer();
+		tickerTimer.scheduleAtFixedRate(stateManager.new TickerTask(stateManager), 0, 1000);
 		
 		// routines for when the plugin gets enabled
 		log("plugin enabled!");

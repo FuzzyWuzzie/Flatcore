@@ -8,6 +8,7 @@ import com.mcnsa.flatcore.managers.PersistanceManager;
 import com.mcnsa.flatcore.managers.StateManager;
 import com.mcnsa.flatcore.util.*;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.logging.Logger;
 
@@ -41,6 +42,7 @@ public class Flatcore extends JavaPlugin {
 	public StateManager stateManager = null;
 	public Timer tickerTimer = null;
 	public ChallengeManager challengeManager = null;
+	public Random random = null;
 
 	public void onEnable() {
 		// set up permissions
@@ -64,6 +66,7 @@ public class Flatcore extends JavaPlugin {
 		this.saveConfig();
 		
 		// load stuff up
+		random = new Random(System.currentTimeMillis());
 		playerListener = new PlayerListener(this);
 		stateManager = new StateManager(this);
 		challengeManager = new ChallengeManager(this);

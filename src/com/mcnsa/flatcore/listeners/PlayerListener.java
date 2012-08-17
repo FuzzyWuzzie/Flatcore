@@ -47,9 +47,8 @@ public class PlayerListener implements Listener {
 		Location location = new Location(player.getWorld(), 0, 0, 0);
 		
 		// get a random x and y
-		Random random = new Random();
-		location.setX(((random.nextDouble() * 2.0) - 1.0) * (double)plugin.config.options.spawnRadius + plugin.config.options.spawnX);
-		location.setZ(((random.nextDouble() * 2.0) - 1.0) * (double)plugin.config.options.spawnRadius + plugin.config.options.spawnZ);
+		location.setX(((plugin.random.nextDouble() * 2.0) - 1.0) * (double)plugin.config.options.spawnRadius + plugin.config.options.spawnX);
+		location.setZ(((plugin.random.nextDouble() * 2.0) - 1.0) * (double)plugin.config.options.spawnRadius + plugin.config.options.spawnZ);
 		
 		// now find the highest block at that location
 		location.setY(player.getWorld().getHighestBlockYAt(location));

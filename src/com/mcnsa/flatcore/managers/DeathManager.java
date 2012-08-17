@@ -12,7 +12,10 @@ import com.mcnsa.flatcore.Flatcore;
 
 public class DeathManager {
 	// keep track of the last damage each player recieved
-	private HashMap<Player, String> lastPlayerDamage = new HashMap<Player, String>();
+	private HashMap<String, String> lastPlayerDamage = new HashMap<String, String>();
+	
+	// keep track of deathban times
+	private HashMap<String, Long> deathBanTimes = new HashMap<String, Long>();
 	
 	Flatcore plugin = null;
 	public DeathManager(Flatcore instance) {
@@ -21,137 +24,145 @@ public class DeathManager {
 	
 	// access our last damage
 	public String lastDamage(Player player) {
-		if(lastPlayerDamage.containsKey(player)) {
-			return lastPlayerDamage.get(player);
+		if(lastPlayerDamage.containsKey(player.getName())) {
+			return lastPlayerDamage.get(player.getName());
 		}
 		else {
 			return "nothing";
 		}
 	}
 	
+	// check whether a player has ever logged in
+	// and update their login status
+	public Boolean newPlayer(Player player) {
+		boolean exists = deathBanTimes.containsKey(player.getName());
+		deathBanTimes.put(player.getName(), 0L);
+		return !exists;
+	}
+	
 	public void setLastDamage(Player player, EntityDamageEvent event) {
 		if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
-			lastPlayerDamage.put(player, "an &6EXPLOSION");
+			lastPlayerDamage.put(player.getName(), "an &6EXPLOSION");
 		}
 		else if(event.getCause() == DamageCause.CONTACT) {
-			lastPlayerDamage.put(player, "a &acactus");
+			lastPlayerDamage.put(player.getName(), "a &acactus");
 		}
 		else if(event.getCause() == DamageCause.DROWNING) {
-			lastPlayerDamage.put(player, "&9drowning");
+			lastPlayerDamage.put(player.getName(), "&9drowning");
 		}
 		else if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-			lastPlayerDamage.put(player, "an &cangry mob");
+			lastPlayerDamage.put(player.getName(), "an &cangry mob");
 			if(event instanceof EntityDamageByEntityEvent) {
 				EntityDamageByEntityEvent mobEvent = (EntityDamageByEntityEvent)event;
 				if(mobEvent.getDamager().getType() == EntityType.ARROW) {
-					lastPlayerDamage.put(player, "an &7arrow");
+					lastPlayerDamage.put(player.getName(), "an &7arrow");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.BLAZE) {
-					lastPlayerDamage.put(player, "a &cblaze");
+					lastPlayerDamage.put(player.getName(), "a &cblaze");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.CAVE_SPIDER) {
-					lastPlayerDamage.put(player, "a &acave spider");
+					lastPlayerDamage.put(player.getName(), "a &acave spider");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.CREEPER) {
-					lastPlayerDamage.put(player, "a &acreeper");
+					lastPlayerDamage.put(player.getName(), "a &acreeper");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.ENDER_DRAGON) {
-					lastPlayerDamage.put(player, "an &5ender dragon");
+					lastPlayerDamage.put(player.getName(), "an &5ender dragon");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.ENDERMAN) {
-					lastPlayerDamage.put(player, "an &5enderman");
+					lastPlayerDamage.put(player.getName(), "an &5enderman");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.FALLING_BLOCK) {
-					lastPlayerDamage.put(player, "&bsuffocation");
+					lastPlayerDamage.put(player.getName(), "&bsuffocation");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.FIREBALL) {
-					lastPlayerDamage.put(player, "a &4fireball");
+					lastPlayerDamage.put(player.getName(), "a &4fireball");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.GHAST) {
-					lastPlayerDamage.put(player, "a &fghast");
+					lastPlayerDamage.put(player.getName(), "a &fghast");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.GIANT) {
-					lastPlayerDamage.put(player, "a &2GIANT");
+					lastPlayerDamage.put(player.getName(), "a &2GIANT");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.IRON_GOLEM) {
-					lastPlayerDamage.put(player, "an &7iron golem");
+					lastPlayerDamage.put(player.getName(), "an &7iron golem");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.LIGHTNING) {
-					lastPlayerDamage.put(player, "&elightning");
+					lastPlayerDamage.put(player.getName(), "&elightning");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.MAGMA_CUBE) {
-					lastPlayerDamage.put(player, "a &4magma cube");
+					lastPlayerDamage.put(player.getName(), "a &4magma cube");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.PIG_ZOMBIE) {
-					lastPlayerDamage.put(player, "a &cpig zombie");
+					lastPlayerDamage.put(player.getName(), "a &cpig zombie");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.PLAYER) {
-					lastPlayerDamage.put(player, "a player");//((Player)mobEvent.getDamager()).getName());
+					lastPlayerDamage.put(player.getName(), ((Player)mobEvent.getDamager()).getName());
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.SILVERFISH) {
-					lastPlayerDamage.put(player, "a &7silverfish");
+					lastPlayerDamage.put(player.getName(), "a &7silverfish");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.SKELETON) {
-					lastPlayerDamage.put(player, "a &fskeleton");
+					lastPlayerDamage.put(player.getName(), "a &fskeleton");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.SLIME) {
-					lastPlayerDamage.put(player, "a &aslime");
+					lastPlayerDamage.put(player.getName(), "a &aslime");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.SMALL_FIREBALL) {
-					lastPlayerDamage.put(player, "a &4fireball");
+					lastPlayerDamage.put(player.getName(), "a &4fireball");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.SPIDER) {
-					lastPlayerDamage.put(player, "a &cspider");
+					lastPlayerDamage.put(player.getName(), "a &cspider");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.SPLASH_POTION) {
-					lastPlayerDamage.put(player, "a &dpotion");
+					lastPlayerDamage.put(player.getName(), "a &dpotion");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.WOLF) {
-					lastPlayerDamage.put(player, "a &7wolf");
+					lastPlayerDamage.put(player.getName(), "a &7wolf");
 				}
 				else if(mobEvent.getDamager().getType() == EntityType.ZOMBIE) {
-					lastPlayerDamage.put(player, "a &2zombie");
+					lastPlayerDamage.put(player.getName(), "a &2zombie");
 				}
 			}
 		}
 		else if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
-			lastPlayerDamage.put(player, "an &aEXPLOSION");
+			lastPlayerDamage.put(player.getName(), "an &aEXPLOSION");
 		}
 		else if(event.getCause() == DamageCause.FALL) {
-			lastPlayerDamage.put(player, "a high fall");
+			lastPlayerDamage.put(player.getName(), "a high fall");
 		}
 		else if(event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK) {
-			lastPlayerDamage.put(player, "&cfire");
+			lastPlayerDamage.put(player.getName(), "&cfire");
 		}
 		else if(event.getCause() == DamageCause.LAVA) {
-			lastPlayerDamage.put(player, "&4lava");
+			lastPlayerDamage.put(player.getName(), "&4lava");
 		}
 		else if(event.getCause() == DamageCause.LIGHTNING) {
-			lastPlayerDamage.put(player, "&elightning");
+			lastPlayerDamage.put(player.getName(), "&elightning");
 		}
 		else if(event.getCause() == DamageCause.MAGIC) {
-			lastPlayerDamage.put(player, "&dmagic");
+			lastPlayerDamage.put(player.getName(), "&dmagic");
 		}
 		else if(event.getCause() == DamageCause.POISON) {
-			lastPlayerDamage.put(player, "&apoison");
+			lastPlayerDamage.put(player.getName(), "&apoison");
 		}
 		else if(event.getCause() == DamageCause.STARVATION) {
-			lastPlayerDamage.put(player, "&6starvation");
+			lastPlayerDamage.put(player.getName(), "&6starvation");
 		}
 		else if(event.getCause() == DamageCause.SUFFOCATION) {
-			lastPlayerDamage.put(player, "&7suffocation");
+			lastPlayerDamage.put(player.getName(), "&7suffocation");
 		}
 		else if(event.getCause() == DamageCause.SUICIDE) {
-			lastPlayerDamage.put(player, "&3suicide");
+			lastPlayerDamage.put(player.getName(), "&3suicide");
 		}
 		else if(event.getCause() == DamageCause.VOID) {
-			lastPlayerDamage.put(player, "the &3void");
+			lastPlayerDamage.put(player.getName(), "the &3void");
 		}
 		else if(event.getCause() == DamageCause.PROJECTILE) {
-			lastPlayerDamage.put(player, "a &fskeleton");
+			lastPlayerDamage.put(player.getName(), "a &fskeleton");
 		}
 		else {
-			lastPlayerDamage.put(player, "&5mysterious forces");
+			lastPlayerDamage.put(player.getName(), "&5mysterious forces");
 		}
 	}
 }

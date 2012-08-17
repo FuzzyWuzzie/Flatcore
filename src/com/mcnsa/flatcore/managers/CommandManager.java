@@ -32,6 +32,7 @@ public class CommandManager {
 		registerCommand(new StartChallenge(plugin));
 		registerCommand(new StopChallenge(plugin));
 		registerCommand(new Help(plugin));
+		registerCommand(new Reload(plugin));
 		//plugin.debug("commands all registered!");
 	}
 

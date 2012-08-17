@@ -29,14 +29,14 @@ public class EntityListener implements Listener {
 	}
 	
 	// handle entities dying
-	@EventHandler
+	/*@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		// prevent drops from non-player-killed mobs
 		if(!(event.getEntity() instanceof Player) && !(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)) {
 			event.setDroppedExp(0);
 			event.getDrops().clear();
 		}
-	}
+	}*/
 	
 	// handle damage / disabled pvp
 	@EventHandler(priority = EventPriority.LOWEST)

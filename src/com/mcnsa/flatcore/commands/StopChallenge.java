@@ -28,7 +28,7 @@ public class StopChallenge implements Command {
 		}
 		
 		// send them a message
-		ColourHandler.sendMessage(player, "&aCongratulations, your challenge &f#" + id + " &ahas been saved!");
+		ColourHandler.sendMessage(player, "&aCongratulations, your challenge &f#" + (id + 1) + " &ahas been saved!");
 		
 		return true;
 	}

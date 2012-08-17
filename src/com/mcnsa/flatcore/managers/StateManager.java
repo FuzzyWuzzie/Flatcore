@@ -69,12 +69,9 @@ public class StateManager {
 	}
 	
 	// apply a specific deathban to a player
-	public void deathBan(Player player, Long time) {
+	public void deathBan(String player, Long time) {
 		// check player permissions
-		if(plugin.hasPermission(player, "admin")) {
-			deathBanTimes.put(player.getName(), 0L); // don't ban admins
-		}
-		deathBanTimes.put(player.getName(), time);
+		deathBanTimes.put(player, time);
 	}
 	
 	// update the timers on death bans

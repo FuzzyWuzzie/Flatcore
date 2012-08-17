@@ -7,7 +7,7 @@ death-ban-time: 12h
 mod-death-ban-time: 10m
 thunder-death: true
 broadcast-death: true
-broadcast-death-message: "&4#player was killed by #deathreason"
+broadcast-death-message: "&4#player was killed by #deathreason and is death-banned for &9#deathbantime"
 private-death-message: "&4You've been killed by #deathreason &4and are now death-banned for &9#deathbantime&4. We'll see you then!"
 deathban-message: "Sorry, #deathreason killed you and you're still banned for #deathbantime"
 spawn-immortality-time: 30s

@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -208,7 +209,18 @@ public class PlayerListener implements Listener {
 			event.setCancelled(true);
 			
 			// and send it back to them in green so they know it was captured
-			ColourHandler.sendMessage(event.getPlayer(), "&a" + event.getMessage());
+			ColourHandler.sendMessage(event.getPlayer(), "&a> &f" + event.getMessage());
+		}
+	}
+	
+	// disable quit messages if they're death-banned
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		// determine if they're death-banned
+		if(plugin.stateManager.deathBanTime(event.getPlayer()) > 0L) {
+			// yup, death-banned!
+			// cancel the quit message
+			event.setQuitMessage("");
 		}
 	}
 	

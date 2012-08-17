@@ -94,6 +94,9 @@ public class ChallengeManager {
 			challenges.set(id, parts[1]);
 		}
 		
+		// stop editing
+		editingChallenges.remove(player.getName());
+		
 		return id;
 	}
 }

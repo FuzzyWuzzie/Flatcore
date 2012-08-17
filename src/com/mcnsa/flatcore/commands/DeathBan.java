@@ -40,7 +40,10 @@ public class DeathBan implements Command {
 		}
 		
 		// set their new deathban time
-		plugin.stateManager.deathBan(player, parsedTime);
+		plugin.stateManager.deathBan(targetName, parsedTime);
+		
+		// echo the information back
+		ColourHandler.sendMessage(player, "&f" + targetName + "'s &adeathban has been set to: &f" + plugin.formatTime(parsedTime));
 		
 		// if the player is online and we have a positive time, we need to kick them!
 		Player targetPlayer = plugin.getServer().getPlayer(targetName);

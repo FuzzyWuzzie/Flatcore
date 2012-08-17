@@ -109,7 +109,9 @@ public class PlayerListener implements Listener {
 			event.setNewLevel(0);
 			
 			// remove all our drops
-			event.getDrops().clear();
+			for(int i = 0; i < event.getDrops().size(); i++) {
+				event.getDrops().get(i).setAmount(0);
+			}
 		}
 		
 		// handle our own death message

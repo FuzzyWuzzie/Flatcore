@@ -130,10 +130,16 @@ public class ColourHandler {
 	}
 	
 	public static void sendMessage(Player player, String message) {
+		if(message.length() < 1) {
+			return;
+		}
 		player.sendMessage(processColours(message));
 	}
 	
 	public static void sendMessage(CommandSender sender, String message) {
+		if(message.length() < 1) {
+			return;
+		}
 		if(sender instanceof Player) {
 			sender.sendMessage(processColours(message));
 		}
@@ -143,6 +149,9 @@ public class ColourHandler {
 	}
 	
 	public static void sendMessage(JavaPlugin plugin, String name, String message) {
+		if(message.length() < 1) {
+			return;
+		}
 		Player player = plugin.getServer().getPlayer(name);
 		if(player != null) {
 			player.sendMessage(processColours(message));
@@ -150,6 +159,9 @@ public class ColourHandler {
 	}
 	
 	public static void consoleMessage(String message) {
+		if(message.length() < 1) {
+			return;
+		}
 		ColouredConsoleSender.getInstance().sendMessage(ColourHandler.processConsoleColours(message));
 	}
 	

@@ -16,6 +16,7 @@ A plugin for implementing all the various things necessary for flatcore
 * The entire state of the plugin saves itself across /reloads, so /reloads are invisible to users
 * Console can use all the commands
 * Plugin configuration can be reloaded with a command
+* Challenge presentation template is configurable
 
 ## Commands
 * `/flathelp [page]` - lists all the "flatcore plugin" commands you have access to, and what they do
@@ -65,6 +66,11 @@ A plugin for implementing all the various things necessary for flatcore
 	spawn-immortality-message: "&aYou're immortal for #immortaltime!"
 	# The message the gets sent to a player when they become mortal
 	spawn-mortality-message: "&cYou''re no longer immortal! Good Luck!"
+	# templates for the /challenge text
+	challenge-header-template: |
+	  &nFlatcore Challenge Week #week
+	challenge-line-template: "&a> &f#text"
+	challenge-footer-template: ""
 	# the various death messages, a random one from each list will be picked when a player dies
 	# Must contain at least 1 line. If there are more, it will appear randomly when a person dies.
 	# %n for player who died

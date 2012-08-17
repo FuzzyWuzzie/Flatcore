@@ -77,6 +77,11 @@ public class ConfigManager {
 		// get the spawn mortality message
 		options.spawnMortalityMessage = config.getString("spawn-mortality-message", "&cYou're no longer immortal! Good Luck!");
 		
+		// load the challenge template
+		options.challengeHeaderTemplate = config.getString("challenge-header-template", "&nFlatcore Challenge Week #week");
+		options.challengeLineTemplate = config.getString("challenge-line-template", "> $text");
+		options.challengeFooterTemplate = config.getString("challenge-footer-template", "");
+		
 		// load the death messages
 		ConfigurationSection deathMessageSection = config.getConfigurationSection("death-messages");
 		Set<String> deathTypes = deathMessageSection.getKeys(false);
@@ -107,6 +112,9 @@ public class ConfigManager {
 		public Long spawnImmortalityReminder = new Long(5);
 		public String spawnImmortalityMessage = new String("&aYou're immortal for #immortaltime!");
 		public String spawnMortalityMessage = new String("&cYou're no longer immortal! Good Luck!");
+		public String challengeHeaderTemplate = new String("&nFlatcore Challenge Week #week");
+		public String challengeLineTemplate = new String("> #text");
+		public String challengeFooterTemplate = new String("");
 		public HashMap<String, ArrayList<String>> deathMessages = new HashMap<String, ArrayList<String>>();
 	}
 }

@@ -13,6 +13,10 @@ spawn-immortality-time: 30s
 spawn-immortality-reminder: 5s
 spawn-immortality-message: "&aYou're immortal for #immortaltime!"
 spawn-mortality-message: "&cYou''re no longer immortal! Good Luck!"
+challenge-header-template: |
+  &nFlatcore Challenge Week #week
+challenge-line-template: "&a> &f#text"
+challenge-footer-template: ""
 death-messages:
   block-explosion:
     - "Careful &5%n&7, TNT goes boom!"

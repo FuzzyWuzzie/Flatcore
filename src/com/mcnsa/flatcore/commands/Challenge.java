@@ -41,8 +41,7 @@ public class Challenge implements Command {
 		challengeText = challengeText.trim().replaceAll("\\s+", " ");
 		
 		// and tell them about it!
-		// send the header
-		ColourHandler.sendMessage(player, "&a#####################################################");
+		// format the week number
 		String weekString = "";
 		if(challengeNumber < 10) {
 			weekString = "0" + challengeNumber;
@@ -50,15 +49,19 @@ public class Challenge implements Command {
 		else {
 			weekString = "" + challengeNumber;
 		}
-		ColourHandler.sendMessage(player, "&a#                     &nFlatcore Challenge Week " + weekString + "&r                     &a#");
-		ColourHandler.sendMessage(player, "&a#####################################################");
+		// send the header
+		// split it into lines though
+		String[] headerLines = plugin.config.options.challengeHeaderTemplate.split("\n");
+		for(int i = 0; i < headerLines.length; i++) {
+			ColourHandler.sendMessage(player, headerLines[i].replaceAll("#week", weekString));
+		}
 		
 		// send the text
 		int maxChars = 50;
 		int textPos = 0;
 		while(textPos < challengeText.length()) {
 			// start building the line
-			String line = "&a> &f";
+			String line = "";
 			// get the remaining text
 			String textLeft = challengeText.substring(textPos);
 			// and break it into tokens
@@ -79,11 +82,15 @@ public class Challenge implements Command {
 			
 			// finish the line
 			// and send it!
-			ColourHandler.sendMessage(player, line);
+			ColourHandler.sendMessage(player, plugin.config.options.challengeLineTemplate.replaceAll("#text", line));
 		}
 		
 		// send the footer
-		ColourHandler.sendMessage(player, "&a#####################################################");
+		// split it into lines though
+		String[] footerLines = plugin.config.options.challengeFooterTemplate.split("\n");
+		for(int i = 0; i < headerLines.length; i++) {
+			ColourHandler.sendMessage(player, footerLines[i].replaceAll("#week", weekString));
+		}
 		
 		return true;
 	}

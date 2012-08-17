@@ -1,6 +1,5 @@
 package com.mcnsa.flatcore.listeners;
 
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -20,7 +19,6 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.mcnsa.flatcore.Flatcore;
 import com.mcnsa.flatcore.util.ColourHandler;
@@ -118,10 +116,7 @@ public class PlayerListener implements Listener {
 			event.setNewLevel(0);
 			
 			// remove all our drops
-			List<ItemStack> drops = event.getDrops();
-			for(int i = 0; i < drops.size(); i++) {
-				drops.get(i).setAmount(0);
-			}
+			event.getDrops().clear();
 		}
 		
 		// handle our own death message

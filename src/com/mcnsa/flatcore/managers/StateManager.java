@@ -70,7 +70,6 @@ public class StateManager {
 	
 	// apply a specific deathban to a player
 	public void deathBan(String player, Long time) {
-		// check player permissions
 		deathBanTimes.put(player, time);
 	}
 	

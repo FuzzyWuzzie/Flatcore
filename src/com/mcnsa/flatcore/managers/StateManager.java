@@ -57,6 +57,9 @@ public class StateManager {
 	// apply a deathban to a player
 	public void deathBan(Player player) {
 		// check player permissions
+		if(plugin.hasPermission(player, "admin")) {
+			deathBanTimes.put(player.getName(), 0L); // don't ban admins
+		}
 		if(plugin.hasPermission(player, "mod")) {
 			deathBanTimes.put(player.getName(), plugin.config.options.modDeathBanTime);
 		}
@@ -72,6 +75,11 @@ public class StateManager {
 		for(String player: deathBanTimes.keySet()) {
 			if(deathBanTimes.get(player) > 0L) {
 				deathBanTimes.put(player, deathBanTimes.get(player) - 1);
+				
+				// make sure it sticks at 0
+				if(deathBanTimes.get(player) < 0L) {
+					deathBanTimes.put(player, 0L);
+				}
 			}
 		}
 	}

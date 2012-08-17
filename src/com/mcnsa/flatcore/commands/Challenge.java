@@ -53,7 +53,8 @@ public class Challenge implements Command {
 		else {
 			weekString = "" + challengeNumber;
 		}
-		ColourHandler.sendMessage(player, "&a> &fFlatcore Challenge Week " + weekString + " &a<");
+		ColourHandler.sendMessage(player, "&a#                     &nFlatcore Challenge Week " + weekString + "&r                     &a#");
+		ColourHandler.sendMessage(player, "&a#####################################################");
 		
 		// send the text
 		int maxChars = 50;

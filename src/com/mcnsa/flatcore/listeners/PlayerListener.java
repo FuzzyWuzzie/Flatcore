@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -190,6 +191,16 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
+		}
+	}
+	
+	// handle entities dying
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		// prevent drops from non-player-killed mobs
+		if(!(event.getEntity() instanceof Player) && !(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)) {
+			event.setDroppedExp(0);
+			event.getDrops().clear();
 		}
 	}
 }

@@ -33,6 +33,12 @@ public class ColourHandler {
 		else if(name.equalsIgnoreCase("&d")) colour = "pink";
 		else if(name.equalsIgnoreCase("&e")) colour = "yellow";
 		else if(name.equalsIgnoreCase("&f")) colour = "white";
+		else if(name.equalsIgnoreCase("&k")) colour = "magic";
+		else if(name.equalsIgnoreCase("&l")) colour = "bold";
+		else if(name.equalsIgnoreCase("&m")) colour = "strikethrough";
+		else if(name.equalsIgnoreCase("&n")) colour = "underlined";
+		else if(name.equalsIgnoreCase("&o")) colour = "italics";
+		else if(name.equalsIgnoreCase("&r")) colour = "reset";
 		
 		return colour;
 	}
@@ -73,6 +79,15 @@ public class ColourHandler {
 		else if(name.equalsIgnoreCase("pink")) colour = "&d";
 		else if(name.equalsIgnoreCase("yellow")) colour = "&e";
 		else if(name.equalsIgnoreCase("white")) colour = "&f";
+		else if(name.equalsIgnoreCase("random")) colour = "&k";
+		else if(name.equalsIgnoreCase("magic")) colour = "&k";
+		else if(name.equalsIgnoreCase("bold")) colour = "&l";
+		else if(name.equalsIgnoreCase("strike")) colour = "&m";
+		else if(name.equalsIgnoreCase("strikethrough")) colour = "&m";
+		else if(name.equalsIgnoreCase("underline")) colour = "&n";
+		else if(name.equalsIgnoreCase("italics")) colour = "&o";
+		else if(name.equalsIgnoreCase("italic")) colour = "&o";
+		else if(name.equalsIgnoreCase("reset")) colour = "&r";
 		
 		return colour;
 	}
@@ -99,12 +114,18 @@ public class ColourHandler {
 		str = str.replaceAll("&d", ChatColor.LIGHT_PURPLE.toString());
 		str = str.replaceAll("&e", ChatColor.YELLOW.toString());
 		str = str.replaceAll("&f", ChatColor.WHITE.toString());
+		str = str.replaceAll("&k", ChatColor.MAGIC.toString());
+		str = str.replaceAll("&l", ChatColor.BOLD.toString());
+		str = str.replaceAll("&m", ChatColor.STRIKETHROUGH.toString());
+		str = str.replaceAll("&n", ChatColor.UNDERLINE.toString());
+		str = str.replaceAll("&o", ChatColor.ITALIC.toString());
+		str = str.replaceAll("&r", ChatColor.RESET.toString());
 		return str;
 	}
 
 	// strip colour tags from strings..
 	public static String stripColours(String str) {
-		return str.replaceAll("(&([a-f0-9]))", "").replaceAll("(\u00A7([a-f0-9]))", "");
+		return str.replaceAll("(&([a-f0-9klmnor]))", "").replaceAll("(\u00A7([a-f0-9klmnor]))", "");
 	}
 	
 	public static void sendMessage(Player player, String message) {

@@ -1,13 +1,14 @@
 spawn-center-x: 0
 spawn-center-z: 0
 spawn-radius: 10000
+disable-pvp: true
 lose-inventory-on-death: true
 death-ban-time: 12h
 thunder-death: true
 broadcast-death: true
-broadcast-death-message: &4%player was killed by &c%deathreason
-private-death-message: &4You've been killed by &c%deathreason &4and are now death-banned for &9%deathbantime&4. We'll see you then!
-deathban-message: Sorry, %deathreason killed you and you're still banned for %deathbantime
+broadcast-death-message: "&4#player was killed by #deathreason"
+private-death-message: "&4You've been killed by #deathreason &4and are now death-banned for &9#deathbantime&4. We'll see you then!"
+deathban-message: "Sorry, #deathreason killed you and you're still banned for #deathbantime"
 spawn-immortality-time: 30s
-spawn-immortality-message: &aYou're immortal for %immortaltime!
-spawn-mortality-message: &cYou're no longer immortal! Good Luck!
+spawn-immortality-message: "&aYou're immortal for #immortaltime!"
+spawn-mortality-message: "&cYou''re no longer immortal! Good Luck!"

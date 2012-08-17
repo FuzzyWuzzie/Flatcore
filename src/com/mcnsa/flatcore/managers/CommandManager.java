@@ -12,22 +12,22 @@ import com.mcnsa.flatcore.util.ColourHandler;
 import com.mcnsa.flatcore.util.Command;
 import com.mcnsa.flatcore.util.CommandInfo;
 
-import com.mcnsa.instanceportals.InstancePortals;
+import com.mcnsa.flatcore.Flatcore;
 
 public class CommandManager {
 	// keep track of the plugin
-	public InstancePortals plugin = null;
+	public Flatcore plugin = null;
 
 	// and the commands
 	public HashMap<String, InternalCommand> commands = new HashMap<String, InternalCommand>();
 
-	public CommandManager(InstancePortals instance) {
+	public CommandManager(Flatcore instance) {
 		plugin = instance;
 
 		// develop the list of all commands here!
 		// TODO: dynamically load commands ALA CommandBook
 		//plugin.debug("registering commands...");
-		//registerCommand(new PortalCreate(plugin));
+		registerCommand(new Challenge(plugin));
 		//plugin.debug("commands all registered!");
 	}
 

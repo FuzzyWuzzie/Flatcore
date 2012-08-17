@@ -1,20 +1,21 @@
-package com.mcnsa.mcnsachat2;
+package com.mcnsa.flatcore;
 
+import com.mcnsa.flatcore.listeners.PlayerListener;
+import com.mcnsa.flatcore.managers.CommandManager;
+import com.mcnsa.flatcore.managers.ConfigManager;
+import com.mcnsa.flatcore.managers.DeathManager;
 import com.mcnsa.flatcore.util.*;
 
-import java.util.List;
-import java.util.Timer;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-public class MCNSAChat2 extends JavaPlugin {
+public class Flatcore extends JavaPlugin {
 	// load the minecraft logger
 	Logger log = Logger.getLogger("Minecraft");
 
@@ -26,6 +27,12 @@ public class MCNSAChat2 extends JavaPlugin {
 
 	// and commands
 	public CommandManager commandManager = null;
+	
+	// listeners
+	public PlayerListener playerListener = null;
+	
+	// now everything else
+	public DeathManager deathManager = null;
 
 	public void onEnable() {
 		// set up permissions
@@ -48,6 +55,10 @@ public class MCNSAChat2 extends JavaPlugin {
 		}
 		this.saveConfig();
 		
+		// load stuff up
+		playerListener = new PlayerListener(this);
+		deathManager = new DeathManager(this);
+		
 		// routines for when the plugin gets enabled
 		log("plugin enabled!");
 	}
@@ -64,13 +75,13 @@ public class MCNSAChat2 extends JavaPlugin {
 	// for simpler logging
 	public void log(String info) {
 		//log.info("[Flatcore] " + info);
-		ColourHandler.consoleMessage(this, "[Flatcore] " + info);
+		ColourHandler.consoleMessage("[Flatcore] " + info);
 	}
 
 	// for error reporting
 	public void error(String info) {
 		//log.info("[Flatcore] <ERROR> " + info);
-		ColourHandler.consoleMessage(this, "[Flatcore] &c<ERROR> " + info);
+		ColourHandler.consoleMessage("[Flatcore] &c<ERROR> " + info);
 	}
 
 	// for debugging
@@ -121,6 +132,16 @@ public class MCNSAChat2 extends JavaPlugin {
 		if(str.length() == 0) str = "0s";
 		
 		return str;
+	}
+	
+	private boolean isLong(String str) {
+		try {
+			Long.parseLong(str);
+		}
+		catch(NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 	
 	public long parseTime(String time) {

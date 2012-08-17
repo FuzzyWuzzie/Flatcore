@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.mcnsa.flatcore.Flatcore;
 import com.mcnsa.flatcore.util.ColourHandler;
@@ -108,10 +109,19 @@ public class PlayerListener implements Listener {
 			event.setNewTotalExp(0);
 			event.setNewLevel(0);
 			
+			// clear our inventory
+			PlayerInventory inventory = event.getEntity().getInventory();
+            for (int i = 0; i <= 39; i++) {
+                inventory.setItem(i, null);
+            }
+			inventory.clear();
+			
 			// remove all our drops
 			for(int i = 0; i < event.getDrops().size(); i++) {
 				event.getDrops().get(i).setAmount(0);
+				event.getDrops().set(i, null);
 			}
+			event.getDrops().clear();
 		}
 		
 		// handle our own death message

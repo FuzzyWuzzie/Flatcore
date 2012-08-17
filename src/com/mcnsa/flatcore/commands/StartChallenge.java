@@ -44,7 +44,7 @@ public class StartChallenge implements Command {
 		
 		// ok, tell them that they're now editing the challenge
 		ColourHandler.sendMessage(player, "&aYou are now editing the challenge for week " + challengeNumber + "!");
-		ColourHandler.sendMessage(player, "&aEverything you type in chat will be added to the challenge until you issue a &f/stopchallenge &acommand!");
+		ColourHandler.sendMessage(player, "&aEverything you type in chat will be added to the challenge until you issue a &f/endchallenge &acommand!");
 		
 		return true;
 	}

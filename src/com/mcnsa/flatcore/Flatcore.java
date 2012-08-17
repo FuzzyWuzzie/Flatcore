@@ -78,6 +78,9 @@ public class Flatcore extends JavaPlugin {
 	}
 
 	public void onDisable() {
+		// disable the timer
+		tickerTimer.cancel();
+		
 		// save persistance
 		persistanceManager.writePersistance();
 		
@@ -193,7 +196,7 @@ public class Flatcore extends JavaPlugin {
 			secondsTime = secs + (mins * 60) + (hours * 3600) + (days * 86400) + (weeks * 604800);
 		}
 		catch(Exception e) {
-			error(e.getMessage());
+			error("could not parse time ('" + time + "'): " + e.getMessage());
 		}
 		
 		return secondsTime;

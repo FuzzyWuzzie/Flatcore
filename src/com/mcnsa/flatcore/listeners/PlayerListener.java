@@ -102,6 +102,9 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerDied(PlayerDeathEvent event) {
+		// set their death ban
+		plugin.stateManager.deathBan(event.getEntity());
+		
 		// should we lose everything when we die?
 		if(plugin.config.options.loseInventoryOnDeath) {
 			// reset all XP
@@ -116,10 +119,10 @@ public class PlayerListener implements Listener {
 			for(int i = 0; i < drops.size(); i++) {
 				drops.get(i).setAmount(0);
 			}
-			
-			// handle our own death message
-			event.setDeathMessage("");
 		}
+		
+		// handle our own death message
+		event.setDeathMessage("");
 		
 		// broadcast?
 		if(plugin.config.options.broadcastDeath) {
@@ -158,8 +161,6 @@ public class PlayerListener implements Listener {
 		message = ColourHandler.processColours(message);
 		event.getEntity().sendMessage(message);
 		
-		// deathban
-		plugin.stateManager.deathBan(event.getEntity());
 		// and kick them
 		event.getEntity().kickPlayer(ColourHandler.stripColours(message));
 	}

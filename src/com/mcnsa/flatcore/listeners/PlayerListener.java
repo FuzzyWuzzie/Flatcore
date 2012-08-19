@@ -1,6 +1,10 @@
 package com.mcnsa.flatcore.listeners;
 
+import java.util.List;
+
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,7 +43,15 @@ public class PlayerListener implements Listener {
 	
 	private Location randomSpawn(Player player) {
 		// find a new spot for them to respawn!
-		Location location = new Location(player.getWorld(), 0, 0, 0);
+		// figure out which world is the main world
+		List<World> worlds = plugin.getServer().getWorlds();
+		World world = worlds.get(0);
+		for(int i = 0; i < worlds.size(); i++) {
+			if(worlds.get(i).getEnvironment().equals(Environment.NORMAL)) {
+				world = worlds.get(i);
+			}
+		}
+		Location location = new Location(world, 0, 0, 0);
 		
 		// get a random x and y
 		location.setX(((plugin.random.nextDouble() * 2.0) - 1.0) * (double)plugin.config.options.spawnRadius + plugin.config.options.spawnX);

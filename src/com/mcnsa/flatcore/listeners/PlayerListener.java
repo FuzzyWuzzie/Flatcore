@@ -107,7 +107,7 @@ public class PlayerListener implements Listener {
 		plugin.stateManager.immortalize(event.getPlayer());
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void playerDied(PlayerDeathEvent event) {
 		// set their death ban
 		plugin.stateManager.deathBan(event.getEntity());
